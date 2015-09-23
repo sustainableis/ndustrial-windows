@@ -1,10 +1,12 @@
+using com.ndustrialio.api.utils.RequestBuilder;
+
 
 namespace com.ndustrialio.api.services
 {
 	
 	public class Feeds : IService
 	{
-		public static String URL = "/feeds/{feed_id}";
+		public static String URI = "/feeds";
 		
 		private string _token;
 		
@@ -15,21 +17,24 @@ namespace com.ndustrialio.api.services
 		
 		public Dictionary<String, String> get(Dictionary <string, string> args)
 		{
-			if (!args.ContainsKey("feed_id"))
-			{
-				throw new ArgumentException("feed_id is necessary for feeds.get!");
-			}
+			string uri = Feeds.URI;
 			
-			// Build request
-			RequestBuilder bulder = RequestBuilder.GET(Feeds.URL, RequestBuilder._token);
-		
-			foreach (var key in args.Keys)
+			if (args.ContainsKey("id"))
 			{
-				builder.setParameter(key, args[key]);
+				uri += "/";
+				uri += args["id"];
+			} else if (args.ContainsKey("key"))
+			{
+				uri += "?key=";
+				uri += args["key"];
 			}
+		
+
 			
 			// Get request
-			HttpWebRequest = builder.getRequest();
+			HttpWebRequest request = RequestBuilder.GET(uri, _token, null);
+			
+			
 			
 			
 		}

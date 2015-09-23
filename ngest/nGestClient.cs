@@ -14,7 +14,7 @@ namespace com.ndustrialio.api.ngest
 		{
 			_feedKey = feed_key;
 			
-			getFeedInfo()
+			getFeedInfo();
 			
 
 		}
@@ -27,8 +27,16 @@ namespace com.ndustrialio.api.ngest
 			// Get API instance
 			ndustrialAPI api = new ndustrialAPI(apiToken);
 			
-			
+			Dictionary<string ,string> feedInfo = 
+				api.FEEDS.get(new Dictionary<string, string>({"key", _feedKey}));
+				
+			_feedToken = feedInfo["token"];
+			_feedTimeZone = feedInfo["timezone"];
 		}
+		
+		
+		
+		
 	
 	
 	}
