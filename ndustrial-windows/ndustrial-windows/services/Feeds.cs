@@ -33,8 +33,6 @@ namespace com.ndustrialio.api.services
 				uri += args["key"];
 			}
 		
-
-			
 			// Get request
 			HttpWebRequest request = RequestBuilder.GET(uri, _token, null);
 

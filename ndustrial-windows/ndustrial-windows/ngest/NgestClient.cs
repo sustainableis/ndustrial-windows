@@ -4,6 +4,9 @@
 using System;
 using System.Collections.Generic;
 using com.ndustrialio.api.utils;
+using System.Net;
+using System.Text;
+using System.IO;
 
 namespace com.ndustrialio.api.ngest
 {
@@ -15,15 +18,21 @@ namespace com.ndustrialio.api.ngest
 		private String _feedKey, _feedToken, _feedTimeZone;
 		
 		private String _apiToken;
-	
-		public NgestClient(string feed_key)
+
+        private String _postURL;
+
+        public NgestClient(string feed_key)
 		{
 			_feedKey = feed_key;
 			
 			getFeedInfo();
-			
 
-		}
+            // Construct post URL
+            _postURL = BASE_URL
+                + _feedToken
+                + "/ngest/"
+                + _feedKey;
+        }
 	
 		private void getFeedInfo()
 		{
@@ -52,6 +61,39 @@ namespace com.ndustrialio.api.ngest
             data.delocalizeTimestamps(_feedTimeZone);
 
             List<String> dataToSend = data.getJSONData();
+
+            foreach (var d in dataToSend)
+            {
+                // Set up post request
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_postURL);
+
+                request.Headers.Add("Content-type", "application/json");
+                request.Headers.Add("Accept", "application/json");
+
+                request.Method = WebRequestMethods.Http.Post;
+
+
+                // Get string bytes
+                UTF8Encoding encoding = new UTF8Encoding();
+
+                // Write body data.. ridiculous API
+                byte[] dataBytes = encoding.GetBytes(d);
+
+                request.ContentLength = dataBytes.Length;
+
+                Stream requestStream = request.GetRequestStream();
+
+                requestStream.Write(dataBytes, 0, dataBytes.Length);
+
+                requestStream.Close();
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                if (response.StatusCode != HttpStatusCode.OK)
+                {
+                    Console.WriteLine("Failed to send data!");
+                }
+            }
 
 
         }
