@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using com.ndustrialio.api.utils;
+using Newtonsoft.Json;
 
 
 namespace com.ndustrialio.api.ngest
 {
-    class TimeSeriesData
+    public class TimeSeriesData
     {
         private String _feedKey;
 
@@ -79,11 +80,56 @@ namespace com.ndustrialio.api.ngest
 
             List<Dictionary<String, String>> dataBucket = new List<Dictionary<String, String>>();
 
+            List<String> ret = new List<String>();
+
+            int bucketSize = 0;
+
             // Organize the data into buckets of MAX_BUCKET_SIZE or less
             foreach (KeyValuePair<DateTime, TimeSeriesDataObject> entry in _data)
             {
-                if (dataBucket.)
+                // Accumulate bucket size
+                bucketSize += entry.Value.Length;
+
+                // Determine if this data bucket is finished
+                if ((bucketSize >= MAX_BUCKET_SIZE) && (dataBucket.Count > 0))
+                {
+                    // Data bucket full, add to list of buckets and clear out 
+                    // for next time
+                    dataBuckets.Add(dataBucket);
+                    dataBucket = new List<Dictionary<String, String>>();
+                    bucketSize = 0;
+                }
+
+                // Add new value into databucket
+                dataBucket.Add(new Dictionary<String, String>
+                    { {"timestamp: ", entry.Key.ToString(TIMESTAMP_FORMAT) },
+                      {"data", entry.Value.toJSON()}
+                    });
             }
+
+            if (dataBucket.Count > 0)
+            {
+                // Append any remainder values
+                dataBuckets.Add(dataBucket);
+            }
+
+            // Could do this in initial loop.. breaking it out to its own loop for simplicity
+            foreach(var bucket in dataBuckets)
+            {
+                Dictionary<String, String> retData = new Dictionary<String, String>();
+
+                // Construct JSONObject to be sent
+                retData["feedKey"] = _feedKey;
+                retData["type"] = "timeseries";
+                retData["data"] = JsonConvert.SerializeObject(bucket);
+
+                // Serialize and add to return list
+                ret.Add(JsonConvert.SerializeObject(retData));
+            }
+
+            return ret;
+
+        }
 
     }
 }

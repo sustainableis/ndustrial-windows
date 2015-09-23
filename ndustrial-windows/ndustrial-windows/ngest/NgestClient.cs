@@ -46,7 +46,15 @@ namespace com.ndustrialio.api.ngest
 			_feedTimeZone = feedInfo["timezone"];
 		}
 
+        public void sendData(TimeSeriesData data)
+        {
+            // Convert all data to UTC
+            data.delocalizeTimestamps(_feedTimeZone);
 
+            List<String> dataToSend = data.getJSONData();
+
+
+        }
 
 
 
