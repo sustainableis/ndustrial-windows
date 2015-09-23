@@ -6,7 +6,7 @@ namespace com.ndustrialio.api.services
 {
     public interface IService
     {
-        Dictionary<string, string> get(Dictionary<String, String> args);
+        ApiData get(Dictionary<String, String> args);
 
     }
 

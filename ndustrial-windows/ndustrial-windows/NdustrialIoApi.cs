@@ -2,13 +2,13 @@ using com.ndustrialio.api.services;
 
 namespace com.ndustrialio.api
 {
-	public class ndustrialAPI
+	public class NdustrialIoApi
 	{
 	
 		// Services
 		public IService FEEDS;
 		
-		public ndustrialAPI(string api_token)
+		public NdustrialIoApi(string api_token)
 		{
 			FEEDS = new Feeds(api_token);
 		}

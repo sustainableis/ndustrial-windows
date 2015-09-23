@@ -7,6 +7,7 @@ using com.ndustrialio.api.utils;
 using System.Net;
 using System.Text;
 using System.IO;
+using com.ndustrialio.api.services;
 
 namespace com.ndustrialio.api.ngest
 {
@@ -21,9 +22,11 @@ namespace com.ndustrialio.api.ngest
 
         private String _postURL;
 
-        public NgestClient(string feed_key)
+        public NgestClient(String api_token, String feed_key)
 		{
 			_feedKey = feed_key;
+
+            _apiToken = api_token;
 			
 			getFeedInfo();
 
@@ -36,23 +39,22 @@ namespace com.ndustrialio.api.ngest
 	
 		private void getFeedInfo()
 		{
-			// Get API token
-			string apiToken = Environment.GetEnvironmentVariable("API_TOKEN");
+
 			
 			// Get API instance
-			ndustrialAPI api = new ndustrialAPI(apiToken);
+			NdustrialIoApi api = new NdustrialIoApi(_apiToken);
 			
             // Get info about our feed
-			Dictionary<String, String> feedInfo = 
-				api.FEEDS.get(new Dictionary<String, String> { { "key", _feedKey } });
+			FeedData feedData = 
+				api.FEEDS.get(new Dictionary<String, String> { { "key", _feedKey } }) as FeedData;
 			
-            if (feedInfo.Count == 0)
+            if (feedData == null)
             {
                 throw new UnregisteredFeedException("Feed with key " + _feedKey + " not does not exist in the ndustrial.io system! Please register your feed.");
             }
 
-            _feedToken = feedInfo["token"];
-			_feedTimeZone = feedInfo["timezone"];
+            _feedToken = feedData.FeedToken;
+            _feedTimeZone = feedData.TimeZone;
 		}
 
         public void sendData(TimeSeriesData data)

@@ -7,7 +7,49 @@ using Newtonsoft.Json;
 
 namespace com.ndustrialio.api.services
 {
-	
+    public class FeedType
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("type")]
+        public String Type { get; set; }
+    }
+
+	public class FeedData : ApiData
+    {
+        [JsonProperty("id")]
+        public int ID { get; set; }
+
+        [JsonProperty("facility_id")]
+        public int FacilityID { get; set; }
+
+        [JsonProperty("description")]
+        public String Description { get; set; }
+
+        [JsonProperty("key")]
+        public String FeedKey { get; set; }
+
+        //[JsonProperty("routing_keys")]
+        //public List<String> RoutingKeys { get; set; }
+
+        [JsonProperty("token")]
+        public String FeedToken { get; set; }
+
+        [JsonProperty("timezone")]
+        public String TimeZone { get; set; }
+
+        [JsonProperty("feed_type")]
+        public FeedType FeedType { get; set; }
+
+        [JsonProperty("status")]
+        public String Status { get; set; }
+
+        [JsonProperty("created_at")]
+        public String CreatedAt { get; set; }
+    }
+
+
 	public class Feeds : IService
 	{
 		public static String URI = "/feeds";
@@ -19,7 +61,7 @@ namespace com.ndustrialio.api.services
 			_token = token;
 		}
 		
-		public Dictionary<String, String> get(Dictionary <String, String> args)
+		public ApiData get(Dictionary <String, String> args)
 		{
 			string uri = Feeds.URI;
 			
@@ -39,6 +81,11 @@ namespace com.ndustrialio.api.services
             // Get response
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                Console.WriteLine("Errore getting feed ! status: " + response.StatusCode);
+            }
+
             String output = "";
 
             // Get response stream 
@@ -47,8 +94,16 @@ namespace com.ndustrialio.api.services
                 output = reader.ReadToEnd();
             }
 
-            // Convert to dictionary and return
-            return JsonConvert.DeserializeObject<Dictionary<String, String>>(output);
+            if (output.Length == 0)
+            {
+                return null;
+            } else
+            {
+                // Convert to dictionary and return
+                List<FeedData> jsonResult = JsonConvert.DeserializeObject<List<FeedData>>(output);
+
+                return jsonResult[0];
+            }
         }
 	}
 	
