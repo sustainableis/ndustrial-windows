@@ -121,10 +121,10 @@ namespace com.ndustrialio.api.ngest
                 // Construct JSONObject to be sent
                 retData["feedKey"] = _feedKey;
                 retData["type"] = "timeseries";
-                retData["data"] = JsonConvert.SerializeObject(bucket);
+                retData["data"] = JsonConvert.SerializeObject(bucket, Formatting.None);
 
                 // Serialize and add to return list
-                ret.Add(JsonConvert.SerializeObject(retData));
+                ret.Add(JsonConvert.SerializeObject(retData, Formatting.None));
             }
 
             return ret;
