@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 
 namespace com.ndustrialio.api.ngest
 {
+
     public class TimeSeriesDataObject
     {
         private Dictionary<String, Dictionary<String, String>> _data;
@@ -23,19 +24,17 @@ namespace com.ndustrialio.api.ngest
             if (_data.ContainsKey(field))
             {
                 throw new NonUniqueFieldIDException();
-            } else
+            }
+            else
             {
                 _data.Add(field, new Dictionary<String, String> { { "value", value.ToString() } });
             }
         }
 
-        public String toJSON()
+        public Dictionary<String, Dictionary<String, String>> Data
         {
-            return JsonConvert.SerializeObject(_data, Formatting.None);
+            get { return _data; }
         }
-
-
-        
 
         public int Length
         {

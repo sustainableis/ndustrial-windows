@@ -30,6 +30,10 @@ namespace com.ndustrialio.api.ngest
 			
 			getFeedInfo();
 
+            Console.WriteLine("Feed key: " + _feedKey);
+            Console.WriteLine("Feed timezone: " + _feedTimeZone);
+            Console.WriteLine("Feed token: " + _feedToken);
+
             // Construct post URL
             _postURL = BASE_URL
                 + _feedToken

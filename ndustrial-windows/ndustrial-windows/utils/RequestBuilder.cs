@@ -14,7 +14,7 @@ namespace com.ndustrialio.api.utils
 		{
 			HttpWebRequest ret = (HttpWebRequest)WebRequest.Create(RequestBuilder.BASE_URL + url);
 
-            Console.WriteLine(WebRequestMethods.Http.Get + ": " + RequestBuilder.BASE_URL + url);
+            //Console.WriteLine(WebRequestMethods.Http.Get + ": " + RequestBuilder.BASE_URL + url);
 			
 			// Add authorization
 			ret.Headers.Add("Authorization", "Bearer " + token);
