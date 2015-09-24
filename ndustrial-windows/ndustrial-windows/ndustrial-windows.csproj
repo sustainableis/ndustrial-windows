@@ -45,10 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ngest\NgestMessage.cs" />
+    <Compile Include="ngest\serialize\NgestMessage.cs" />
     <Compile Include="ngest\TimeSeriesData.cs" />
     <Compile Include="ngest\TimeSeriesDataObject.cs" />
-    <Compile Include="ngest\TimestampedValues.cs" />
+    <Compile Include="ngest\serialize\TimestampedValues.cs" />
     <Compile Include="services\ApiData.cs" />
     <Compile Include="utils\NonUniqueFieldIDException.cs" />
     <Compile Include="utils\UnregisteredFeedException.cs" />
@@ -62,6 +62,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
