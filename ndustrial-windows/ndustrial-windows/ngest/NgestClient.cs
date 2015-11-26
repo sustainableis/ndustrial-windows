@@ -7,6 +7,7 @@ using com.ndustrialio.api.utils;
 using System.Net;
 using System.Text;
 using System.IO;
+using System.Threading;
 using com.ndustrialio.api.services;
 
 namespace com.ndustrialio.api.ngest
@@ -17,7 +18,7 @@ namespace com.ndustrialio.api.ngest
         private static String BASE_URL = "https://data.ndustrial.io/v1/";
 
 		private String _feedKey, _feedToken, _feedTimeZone;
-		
+
 		private String _apiToken;
 
         private String _postURL;
@@ -27,7 +28,7 @@ namespace com.ndustrialio.api.ngest
 			_feedKey = feed_key;
 
             _apiToken = api_token;
-			
+
 			getFeedInfo();
 
             Console.WriteLine("Feed key: " + _feedKey);
@@ -40,18 +41,18 @@ namespace com.ndustrialio.api.ngest
                 + "/ngest/"
                 + _feedKey;
         }
-	
+
 		private void getFeedInfo()
 		{
 
-			
+
 			// Get API instance
 			NdustrialIoApi api = new NdustrialIoApi(_apiToken);
-			
+
             // Get info about our feed
-			FeedData feedData = 
+			FeedData feedData =
 				api.FEEDS.get(new Dictionary<String, String> { { "key", _feedKey } }) as FeedData;
-			
+
             if (feedData == null)
             {
                 throw new UnregisteredFeedException("Feed with key " + _feedKey + " not does not exist in the ndustrial.io system! Please register your feed.");
@@ -104,10 +105,11 @@ namespace com.ndustrialio.api.ngest
 
         }
 
-
-
-
+        public void sendDataAsync(TimeSeriesData data)
+        {
+            Thread thread = new Thread(() => sendData(data));
+            thread.Start();
+        }
 
     }
 }
-
