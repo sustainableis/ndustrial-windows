@@ -118,12 +118,24 @@ namespace com.ndustrialio.api.ngest
 
                 requestStream.Close();
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                // Need to dispose of the response to avoid an exception on the next request.
+                HttpWebResponse response;
+
+                using (response = (HttpWebResponse)request.GetResponse())
                 {
-                    Console.WriteLine("Failed to send data!");
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Console.WriteLine("Failed to send data!");
+                    }
                 }
+
+                //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //{
+                //    Console.WriteLine("Failed to send data!");
+                //}
             }
 
 
