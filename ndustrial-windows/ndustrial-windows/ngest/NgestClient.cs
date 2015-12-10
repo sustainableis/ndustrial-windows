@@ -97,8 +97,8 @@ namespace com.ndustrialio.api.ngest
                 property = HeaderProperties[propertyName];
                 property.SetValue(request, "application/json", null);
 
-                request.Headers.Add("Content-Type", "application/json");
-                request.Headers.Add("Accept", "application/json");
+                //request.Headers.Add("Content-Type", "application/json");
+                //request.Headers.Add("Accept", "application/json");
 
 
                 request.Method = WebRequestMethods.Http.Post;
