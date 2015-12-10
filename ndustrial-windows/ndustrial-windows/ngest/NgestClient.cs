@@ -75,8 +75,29 @@ namespace com.ndustrialio.api.ngest
                 // Set up post request
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_postURL);
 
-                request.Headers.Add("Content-type", "application/json");
-                request.Headers.Add("Accept", "application/json");
+
+                // Need to modify the property since adding causes an exception.
+                // Probably should be a function.
+                Type type = typeof(HttpWebRequest);
+                PropertyInfo headerProperty;
+                PropertyInfo property;
+                string propertyName;
+
+                //propertyName = "ContentType";
+                //headerProperty = type.GetProperty(propertyName);
+                //HeaderProperties[propertyName] = headerProperty;
+                //property = HeaderProperties[propertyName];
+                //property.SetValue(request, "application/json", null);
+
+                //propertyName = "Accept";
+                //headerProperty = type.GetProperty(propertyName);
+                //HeaderProperties[propertyName] = headerProperty;
+                //property = HeaderProperties[propertyName];
+                //property.SetValue(request, "application/json", null);
+
+                //request.Headers.Add("Content-Type", "application/json");
+                //request.Headers.Add("Accept", "application/json");
+
 
                 request.Method = WebRequestMethods.Http.Post;
 
