@@ -63,6 +63,8 @@ namespace com.ndustrialio.api.ngest
             _feedTimeZone = feedData.TimeZone;
 		}
 
+        static Dictionary<string, PropertyInfo> HeaderProperties = new Dictionary<string, PropertyInfo>(StringComparer.OrdinalIgnoreCase);
+
         public void sendData(TimeSeriesData data)
         {
             // Convert all data to UTC
@@ -83,20 +85,20 @@ namespace com.ndustrialio.api.ngest
                 PropertyInfo property;
                 string propertyName;
 
-                //propertyName = "ContentType";
-                //headerProperty = type.GetProperty(propertyName);
-                //HeaderProperties[propertyName] = headerProperty;
-                //property = HeaderProperties[propertyName];
-                //property.SetValue(request, "application/json", null);
+                propertyName = "ContentType";
+                headerProperty = type.GetProperty(propertyName);
+                HeaderProperties[propertyName] = headerProperty;
+                property = HeaderProperties[propertyName];
+                property.SetValue(request, "application/json", null);
 
-                //propertyName = "Accept";
-                //headerProperty = type.GetProperty(propertyName);
-                //HeaderProperties[propertyName] = headerProperty;
-                //property = HeaderProperties[propertyName];
-                //property.SetValue(request, "application/json", null);
+                propertyName = "Accept";
+                headerProperty = type.GetProperty(propertyName);
+                HeaderProperties[propertyName] = headerProperty;
+                property = HeaderProperties[propertyName];
+                property.SetValue(request, "application/json", null);
 
-                //request.Headers.Add("Content-Type", "application/json");
-                //request.Headers.Add("Accept", "application/json");
+                request.Headers.Add("Content-Type", "application/json");
+                request.Headers.Add("Accept", "application/json");
 
 
                 request.Method = WebRequestMethods.Http.Post;
