@@ -9,6 +9,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using com.ndustrialio.api.services;
+using System.Reflection;
 
 namespace com.ndustrialio.api.ngest
 {
