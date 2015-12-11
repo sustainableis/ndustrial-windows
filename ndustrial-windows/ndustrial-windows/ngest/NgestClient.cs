@@ -9,6 +9,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 using com.ndustrialio.api.services;
+using System.Reflection;
 
 namespace com.ndustrialio.api.ngest
 {
@@ -62,6 +63,8 @@ namespace com.ndustrialio.api.ngest
             _feedTimeZone = feedData.TimeZone;
 		}
 
+        static Dictionary<string, PropertyInfo> HeaderProperties = new Dictionary<string, PropertyInfo>(StringComparer.OrdinalIgnoreCase);
+
         public void sendData(TimeSeriesData data)
         {
             // Convert all data to UTC
@@ -74,8 +77,29 @@ namespace com.ndustrialio.api.ngest
                 // Set up post request
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_postURL);
 
-                request.Headers.Add("Content-type", "application/json");
-                request.Headers.Add("Accept", "application/json");
+
+                // Need to modify the property since adding causes an exception.
+                // Probably should be a function.
+                Type type = typeof(HttpWebRequest);
+                PropertyInfo headerProperty;
+                PropertyInfo property;
+                string propertyName;
+
+                propertyName = "ContentType";
+                headerProperty = type.GetProperty(propertyName);
+                HeaderProperties[propertyName] = headerProperty;
+                property = HeaderProperties[propertyName];
+                property.SetValue(request, "application/json", null);
+
+                propertyName = "Accept";
+                headerProperty = type.GetProperty(propertyName);
+                HeaderProperties[propertyName] = headerProperty;
+                property = HeaderProperties[propertyName];
+                property.SetValue(request, "application/json", null);
+
+                //request.Headers.Add("Content-Type", "application/json");
+                //request.Headers.Add("Accept", "application/json");
+
 
                 request.Method = WebRequestMethods.Http.Post;
 
@@ -94,12 +118,24 @@ namespace com.ndustrialio.api.ngest
 
                 requestStream.Close();
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
 
-                if (response.StatusCode != HttpStatusCode.OK)
+                // Need to dispose of the response to avoid an exception on the next request.
+                HttpWebResponse response;
+
+                using (response = (HttpWebResponse)request.GetResponse())
                 {
-                    Console.WriteLine("Failed to send data!");
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        Console.WriteLine("Failed to send data!");
+                    }
                 }
+
+                //HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+
+                //if (response.StatusCode != HttpStatusCode.OK)
+                //{
+                //    Console.WriteLine("Failed to send data!");
+                //}
             }
 
 
