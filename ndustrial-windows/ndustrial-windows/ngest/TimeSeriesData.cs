@@ -13,7 +13,8 @@ namespace com.ndustrialio.api.ngest
         private String _feedKey;
 
         public static String TIMESTAMP_FORMAT = "yyyy-MM-dd HH:mm:ss";
-        public static int MAX_BUCKET_SIZE = 50;
+        public static int MAX_MESSAGE_FIELDS = 50;
+        public static int MIN_MESSAGE_FIELDS = 20;
         public static String TYPE = "timeseries";
 
         private SortedDictionary<DateTime, TimeSeriesDataObject> _data;
@@ -78,33 +79,55 @@ namespace com.ndustrialio.api.ngest
 
         public List<String> getJSONData()
         {
-            // Whoa
+
+
             List<NgestMessage> nGestMessages = new List<NgestMessage>();
 
-            List<TimestampedValues> dataBucket = 
-                new List<TimestampedValues>();
+            List<TimeSeriesDataObject> dataBucket = 
+                new List<TimeSeriesDataObject>();
 
             List<String> ret = new List<String>();
 
-            int bucketSize = 0;
 
             // Organize the data into buckets of MAX_BUCKET_SIZE or less
             foreach (KeyValuePair<DateTime, TimeSeriesDataObject> entry in _data)
             {
+                Dictionary<String, String> bucket = new Dictionary<String, String>();
+
+                // Get the data at this timestamp
+                Dictionary<String, String> fields = entry.Value.Data;
+
+                // Now have appropriately sized bucket of MAX_BUCKET_SIZE or less
+                NgestMessage message =
+                    new NgestMessage(TimeSeriesData.TYPE,
+                                    _feedKey,
+                                    dataBucket);
+
+                foreach (KeyValuePair<String, String> field in fields)
+                {
+                    bucket.Add(field.Key, field.Value);
+
+                    if (bucket.Keys.Count == MAX_BUCKET_SIZE)
+                    {
+
+                    }
+                }
 
 
-                // Accumulate bucket size
-                bucketSize += entry.Value.Length;
+
+
+                // We want to portion the buckets into 
+
+                    // Accumulate bucket size
+                    // This is basically the number of keys 
+                    bucketSize += entry.Value.Length;
 
                 // Determine if this data bucket is finished
                 if ((bucketSize >= MAX_BUCKET_SIZE) && (dataBucket.Count > 0))
                 {
                     // Data bucket full, add to list of buckets and clear out 
                     // for next time
-                    NgestMessage message =
-                        new NgestMessage(TimeSeriesData.TYPE,
-                                        _feedKey,
-                                        dataBucket);
+
 
                     nGestMessages.Add(message);
                     dataBucket = new List<TimestampedValues>();

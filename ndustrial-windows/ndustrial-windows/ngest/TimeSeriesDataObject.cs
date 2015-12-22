@@ -11,11 +11,11 @@ namespace com.ndustrialio.api.ngest
 
     public class TimeSeriesDataObject
     {
-        private Dictionary<String, Dictionary<String, String>> _data;
+        private Dictionary<String, String> _data;
 
         public TimeSeriesDataObject()
         {
-            _data = new Dictionary<String, Dictionary<String, String>>();
+            _data = new Dictionary<String, String>();
         }
 
 
@@ -27,11 +27,11 @@ namespace com.ndustrialio.api.ngest
             }
             else
             {
-                _data.Add(field, new Dictionary<String, String> { { "value", value.ToString() } });
+                _data.Add(field, value.ToString());
             }
         }
 
-        public Dictionary<String, Dictionary<String, String>> Data
+        public Dictionary<String, String> Data
         {
             get { return _data; }
         }
