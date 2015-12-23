@@ -67,9 +67,6 @@ namespace com.ndustrialio.api.ngest
 
         public void sendData(TimeSeriesData data)
         {
-            // Convert all data to UTC
-            data.delocalizeTimestamps(_feedTimeZone);
-
             List<String> dataToSend = data.getJSONData();
 
             foreach (var d in dataToSend)
@@ -111,6 +108,11 @@ namespace com.ndustrialio.api.ngest
             }
 
 
+        }
+
+        public TimeSeriesData newTimeSeries()
+        {
+            return new TimeSeriesData(_feedKey, _feedTimeZone);
         }
 
         public void sendDataAsync(TimeSeriesData data)

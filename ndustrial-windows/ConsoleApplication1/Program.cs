@@ -18,7 +18,8 @@ namespace com.ndustrialio.test
             var ngestClient = new NgestClient(args[0], FEED_KEY);
 
 
-            TimeSeriesData data = new TimeSeriesData(FEED_KEY);
+
+            TimeSeriesData data = ngestClient.newTimeSeries();
 
             String testField = "test_field";
 
