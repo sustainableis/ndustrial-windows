@@ -3,13 +3,15 @@
 
 using System;
 using System.Collections.Generic;
-using com.ndustrialio.api.utils;
 using System.Net;
 using System.Text;
 using System.IO;
 using System.Threading;
 using com.ndustrialio.api.services;
 using System.Reflection;
+
+using com.ndustrialio.api.errors;
+
 
 namespace com.ndustrialio.api.ngest
 {

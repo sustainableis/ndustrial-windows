@@ -1,9 +1,10 @@
-using com.ndustrialio.api.utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
+
+using com.ndustrialio.api.http;
 
 namespace com.ndustrialio.api.services
 {
@@ -50,60 +51,28 @@ namespace com.ndustrialio.api.services
     }
 
 
-	public class Feeds : IService
+	public class Feeds : Service
 	{
 		public static String URI = "/feeds";
 		
-		private string _token;
 		
-		public Feeds(string token)
-		{
-			_token = token;
-		}
+		public Feeds(Client client) : base(client) { }
 		
-		public ApiData get(Dictionary <String, String> args)
+		public List<FeedData> get(object id=null, Dictionary <String, String> parameters=null)
 		{
 			string uri = Feeds.URI;
 			
-			if (args.ContainsKey("id"))
-			{
-				uri += "/";
-				uri += args["id"];
-			} else if (args.ContainsKey("key"))
-			{
-				uri += "?key=";
-				uri += args["key"];
-			}
-		
-			// Get request
-			HttpWebRequest request = RequestBuilder.GET(uri, _token, null);
-
-            // Get response
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-            if (response.StatusCode != HttpStatusCode.OK)
+            if (id != null)
             {
-                Console.WriteLine("Errore getting feed ! status: " + response.StatusCode);
+                uri += "/";
+                uri += id;
             }
 
-            String output = "";
+            Response response = this._get(new Request(uri, parameters:parameters));
 
-            // Get response stream 
-            using (var reader = new StreamReader(response.GetResponseStream()))
-            {
-                output = reader.ReadToEnd();
-            }
+            List<FeedData> ret = JsonConvert.DeserializeObject<List<FeedData>>(response.ToString());
 
-            if (output.Length == 0)
-            {
-                return null;
-            } else
-            {
-                // Convert to dictionary and return
-                List<FeedData> jsonResult = JsonConvert.DeserializeObject<List<FeedData>>(output);
-
-                return jsonResult[0];
-            }
+            return ret;
         }
 	}
 	

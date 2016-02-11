@@ -6,7 +6,7 @@ namespace com.ndustrialio.api
 	{
 	
 		// Services
-		public IService FEEDS;
+		public Service FEEDS;
 		
 		public NdustrialIoApi(string api_token)
 		{

@@ -9,7 +9,7 @@ namespace com.ndustrialio.test
 {
     class Program
     {
-        public static String FEED_KEY = "ngest-test-feed";
+        public static String FEED_KEY = "ngest-geneva-mm";
 
         static void Main(string[] args)
         {

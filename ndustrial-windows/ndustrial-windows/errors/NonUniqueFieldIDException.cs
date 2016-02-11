@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace com.ndustrialio.api.utils
+namespace com.ndustrialio.api.errors
 {
 
     [Serializable()]

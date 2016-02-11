@@ -2,7 +2,7 @@
 
 using System;
 
-namespace com.ndustrialio.api.utils
+namespace com.ndustrialio.api.errors
 {
     [Serializable()]
     public class UnregisteredFeedException : System.Exception
